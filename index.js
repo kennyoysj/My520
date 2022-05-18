@@ -45,7 +45,7 @@ S.Drawing = (function () {
             requestFrame.call(window, this.loop.bind(this));
         },
         adjustCanvas: function () {
-            canvas.width = window.innerWidth - 100;
+            canvas.width = window.innerWidth - 50;
             canvas.height = window.innerHeight - 30;
         },
         clearFrame: function () {
@@ -69,7 +69,7 @@ S.UI = (function () {
     var interval,
         currentAction,
         time,
-        maxShapeSize = 30,
+        maxShapeSize = 60,
         sequence = [],
         cmd = '#';
 
@@ -128,7 +128,7 @@ S.UI = (function () {
                             if (sequence.length === 0) {
                                 S.Shape.switchShape(S.ShapeBuilder.letter(''));
                             } else {
-                                // window.open('love.html', '_self');
+                                window.open('love.html', '_self');
                                 performAction(sequence);
                             }
                         } else {
@@ -184,6 +184,9 @@ S.Point = function (args) {
     this.x = args.x;
     this.y = args.y;
     this.z = args.z;
+    if(args.z > 5) {
+        console.log(args)
+    }
     this.a = args.a;
     this.h = args.h;
 };
@@ -207,7 +210,7 @@ S.Dot = function (x, y) {
     this.p = new S.Point({
         x: x,
         y: y,
-        z: 5,
+        z: 3,
         a: 1,
         h: 0
     });
@@ -309,7 +312,7 @@ S.Dot.prototype = {
 
 
 S.ShapeBuilder = (function () {
-    var gap = 13,
+    var gap = 6, // 控制采样步长数字越小图像点越密
         shapeCanvas = document.createElement('canvas'),
         shapeContext = shapeCanvas.getContext('2d'),
         fontSize = 500,
@@ -499,11 +502,12 @@ S.Shape = (function () {
                 }
 
                 dots[d].s = true;
+                // 控制文字园点大小 z
                 dots[d].move(new S.Point({
                     x: n.dots[i].x + cx,
                     y: n.dots[i].y + cy,
                     a: 1,
-                    z: 5,
+                    z: 3,
                     h: 0
                 }));
 

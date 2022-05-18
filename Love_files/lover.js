@@ -1,10 +1,10 @@
 (function () {
     var canvas = $('#canvas');
     let wrap = $('#wrap');
-    let min_height = window.innerHeight;
-    let min_width = window.innerWidth - 50;
-    wrap.attr("style", `min-height:${min_height}px;min-width:${min_width}px`);
-
+    let min_height = window.innerHeight-20;
+    let min_width = window.innerWidth;
+    wrap.attr("style", `height:${min_height}px;width:${min_width}px`);
+    
     if (!canvas[0].getContext) {
         $("#error").show();
         return false;
@@ -67,7 +67,11 @@
             canvas.unbind("click");
             canvas.unbind("mousemove");
             canvas.removeClass('hand');
+            
         }
+        let a = document.getElementById("media");
+        console.log(a)
+        a.play();
     }).mousemove(function (e) {
         var offset = canvas.offset(), x, y;
         x = e.pageX - offset.left;
@@ -106,13 +110,13 @@
     }));
 
     var moveAnimate = eval(Jscex.compile("async", function () {
-        tree.snapshot("p1", x, 0, 610, 680);
-        while (tree.move("p1", 200, 0)) {
+        tree.snapshot("p1", 0, 0, width, height);
+        while (tree.move("p1", 150, 0)) {
             foot.draw();
             $await(Jscex.Async.sleep(10));
         }
         foot.draw();
-        tree.snapshot("p2", x, 0, y+610, y+680);
+        tree.snapshot("p2", 0, 0, width, height);
 
         // 会有闪烁不得意这样做, (＞﹏＜)
         canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
@@ -158,5 +162,26 @@
         $await(jumpAnimate());
     }));
 
+    let get_device = function($window) {
+        /**
+         * 获取是否是手机的标识
+         */
+        console.log($window)
+        let navigator_ = $window.navigator
+        if(navigator_) var ua = navigator_['userAgent'] || navigator_['vendor'] || $window['opera'];
+        let flag = (/iPhone|iPod|iPad|Silk|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
+        return flag;
+    }
+    if(get_device({"navigator":navigator})) {
+        if(min_height > min_width) {
+            let clock_box = $("#clock-box")
+            clock_box.attr("style",`bottom:${min_height/2.2}px`)
+            let code = $('#code')
+            code.attr("style",`font-size:1.3em`)
+        }
+    }else{
+        let clock_box = $("#clock-box")
+        clock_box.attr("style",`bottom:${min_height/4}px`)
+    }
     runAsync().start();
 })();

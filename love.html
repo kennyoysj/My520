@@ -5,7 +5,6 @@
     <title>一封情书</title>
     <link rel="icon" type="image/x-icon" href="https://i.loli.net/2021/06/03/lFg2V4WUcmkB98G.png">
     <meta name="language" content="zh-CN">
-    <meta name="title" content="小孙同学">
     <meta name="github" content="https://github.com/sun0225SUN/Awesome-Love-Code">
     <meta name="describe" content="收集不易，您的star是我坚持的动力，同时也欢迎各位PR哦! ">
     <link type="text/css" rel="stylesheet" href="./Love_files/default.css">
@@ -17,6 +16,7 @@
     <script type="text/javascript" src="./Love_files/jscex-async.min.js"></script>
     <script type="text/javascript" src="./Love_files/jscex-async-powerpack.min.js"></script>
     <script type="text/javascript" src="./Love_files/functions.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./Love_files/jweixin-1.4.0.js" charset="utf-8"></script>
     <script type="text/javascript" src="./Love_files/love.js" charset="utf-8"></script>
 
 </head>
@@ -26,7 +26,8 @@
         <div id="wrap">
             <div id="text">
                 <div id="code">
-                    <span class="say">一定要爱你</span><br><br>
+                    <span class="say">一定要爱你</span><br>
+                    <br>
                     <span class="say">我知道你是一个天真善良温柔的女孩</span><br>
                     <span class="say">真的希望自己能够配上你</span><br>
                     <span class="say">如果你能给我机会让我好好的爱你</span><br>
@@ -47,14 +48,34 @@
                 </div>
             </div>
             <div id="clock-box">
-                <a href="https://sunguoqi.com" target="_blank">戴戴</a> 和 <a href="https://sunguoqi.com"
+                <a href="" target="_blank">戴戴</a> 和 <a href=""
                     target="_blank">思洁</a> 在一起的
                 <div id="clock"></div>
             </div>
             <canvas id="canvas"></canvas>
         </div>
     </div>
-    <audio preload="auto" autoplay="" id="media" src="love.mp3" autoplay preload loop="loop"></audio> 
+
+    <audio id="media" src="love.mp3" preload="preload" loop="loop"></audio> 
+    <script>
+        window.onload = function(){
+            console.log("onload")
+            function autoPlayAudio() {
+                    wx.config({
+                        debug: false
+                        , appId: ''
+                        , timestamp: 1
+                        , nonceStr: ''
+                        , signature: ''
+                        , jsApiList: []
+                    });
+                    wx.ready(function () {
+                        document.getElementById("media").play();
+                    });
+                }
+            autoPlayAudio();
+        }
+    </script>
     <script src="./Love_files/lover.js"></script>
 </body>
 

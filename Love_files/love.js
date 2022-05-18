@@ -225,7 +225,7 @@
         this.opt = opt || {};
 
         this.record = {};
-        
+        this.times = 0;
         this.initSeed();
         this.initFooter();
         this.initBranch();
@@ -239,7 +239,6 @@
             var point = new Point(x, y);
             var color = seed.color || '#FF0000';
             var scale = seed.scale || 1;
-
             this.seed = new Seed(this, point, scale, color);
         },
 
@@ -375,6 +374,9 @@
         },
 
         snapshot: function(k, x, y, width, height) {
+            /**
+             * 在指定位置截取一个image
+             */
             var ctx = this.ctx;
             var image = ctx.getImageData(x, y, width, height); 
             this.record[k] = {
@@ -419,17 +421,18 @@
                 for (var i = 0; i < blooms.length; i++) {
                     blooms[i].jump();
                 }
-            } 
-            if ((blooms.length && blooms.length < 3) || !blooms.length) {
+            }
+            if ((blooms.length && blooms.length < 3) || !blooms.length || this.times % 100==0) {
                 var bloom = this.opt.bloom || {},
                     width = bloom.width || this.width,
                     height = bloom.height || this.height,
                     figure = this.seed.heart.figure;
                 var r = 240, x, y;
                 for (var i = 0; i < random(1,2); i++) {
-                    blooms.push(this.createBloom(width / 2 + width, height, r, figure, null, 1, null, 1, new Point(random(-100,600), 720), random(200,300)));
+                    blooms.push(this.createBloom(width+150, height, r, figure, null, 1, null, 1, new Point(random(-100,600), parseInt(this.canvas.getAttribute("height"))+50 ), random(200,300)));
                 }
             }
+            this.times ++;
         }
     }
 
@@ -523,7 +526,6 @@
         },
         jump: function() {
             var s = this, height = s.tree.height;
-
             if (s.point.x < -20 || s.point.y > height + 20) {
                 s.tree.removeBloom(s);
             } else {
