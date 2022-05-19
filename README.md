@@ -6,7 +6,7 @@
 项目效果：
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200625202043188.gif)
 在线演示：
-[https://love.kennoysj.site](https://love.kennoysj.site)
+[https://love.kennyoysj.site/](https://love.kennyoysj.site/)
 
 
 ## 二：使用方法
