@@ -1,10 +1,27 @@
+function getUrlParam(name){
+    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substring(1).match(reg);  //匹配目标参数
+    if (r!=null) return decodeURI(r[2]); return null; //返回参数值
+}
+
+
+
 (function () {
+    let female = getUrlParam("female")
+    if(female == null) female = "戴莉"
+    let male = getUrlParam("male")
+    if(male == null) male = "思洁"
+    let meet_time = getUrlParam("meet_time")
+    if(meet_time == null) meet_time = "2020-03-22 23:59:59";
     var canvas = $('#canvas');
     let wrap = $('#wrap');
     let min_height = window.innerHeight-20;
     let min_width = window.innerWidth;
     wrap.attr("style", `height:${min_height}px;width:${min_width}px`);
-    
+    let female_html = $('#female')
+    female_html.html(female)
+    let male_html = $('#male')
+    male_html.html(male)
     if (!canvas[0].getContext) {
         $("#error").show();
         return false;
@@ -136,12 +153,7 @@
     }));
 
     var textAnimate = eval(Jscex.compile("async", function () {
-        var together = new Date();
-        together.setFullYear(2020, 2, 22);
-        together.setHours(23);
-        together.setMinutes(59);
-        together.setSeconds(59);
-        together.setMilliseconds(0);
+        var together = new Date(meet_time);
         console.log(together)
         $("#code").show().typewriter();
         $("#clock-box").fadeIn(500);

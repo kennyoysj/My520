@@ -1,19 +1,47 @@
 /**
  * 不知由何人写的粒子动画显示文字效果
  */
-
+let female = getUrlParam("female")
+if(female == null) female = "莉莉"
+let male = getUrlParam("male")
+if(male == null) male = "思洁"
+let meet_time = getUrlParam("meet_time")
+if(meet_time == null) meet_time = "2020-03-22 23:59:59"
+let image_url = getUrlParam("image_url")
+console.log(image_url)
+if(image_url != null) {
+    let logo = document.getElementById('logo')
+    logo.src = image_url
+}
+let if_mobile = get_device({"navigator": navigator})
 var S = {
     init: function () {
         S.Drawing.init('.canvas');
         document.body.classList.add('body--ready');
         //想说的话
-        S.UI.simulate("戴莉|I'm|欧阳思洁|Nice|to|Meet|You|#countdown 3|#time");
+        S.UI.simulate(`${female}|I'm|${male}|Nice|to|Meet|You|#countdown 3|#time`);
         S.Drawing.loop(function () {
             S.Shape.render();
         });
     }
 };
 
+function getUrlParam(name){
+    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substring(1).match(reg);  //匹配目标参数
+    if (r!=null) return decodeURI(r[2]); return null; //返回参数值
+}
+
+function get_device($window) {
+    /**
+     * 获取是否是手机的标识
+     */
+    console.log($window)
+    let navigator_ = $window.navigator
+    if(navigator_) var ua = navigator_['userAgent'] || navigator_['vendor'] || $window['opera'];
+    let flag = (/iPhone|iPod|iPad|Silk|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
+    return flag;
+}
 
 S.Drawing = (function () {
     var canvas,
@@ -128,8 +156,11 @@ S.UI = (function () {
                             if (sequence.length === 0) {
                                 S.Shape.switchShape(S.ShapeBuilder.letter(''));
                             } else {
-                                window.open('love.html', '_self');
                                 performAction(sequence);
+                                setTimeout(function(){
+                                    window.open(`love.html?male=${male}&female=${female}&meet_time=${meet_time}`, '_self');
+                                },200)
+                                
                             }
                         } else {
                             S.Shape.switchShape(S.ShapeBuilder.letter(index), true);
@@ -184,9 +215,9 @@ S.Point = function (args) {
     this.x = args.x;
     this.y = args.y;
     this.z = args.z;
-    if(args.z > 5) {
-        console.log(args)
-    }
+    // if(args.z > 5) {
+    //     console.log(args)
+    // }
     this.a = args.a;
     this.h = args.h;
 };
@@ -210,7 +241,7 @@ S.Dot = function (x, y) {
     this.p = new S.Point({
         x: x,
         y: y,
-        z: 3,
+        z: 5,
         a: 1,
         h: 0
     });
@@ -312,7 +343,7 @@ S.Dot.prototype = {
 
 
 S.ShapeBuilder = (function () {
-    var gap = 6, // 控制采样步长数字越小图像点越密
+    var gap = if_mobile? 7 : 13 , // 控制采样步长数字越小图像点越密
         shapeCanvas = document.createElement('canvas'),
         shapeContext = shapeCanvas.getContext('2d'),
         fontSize = 500,
@@ -408,6 +439,7 @@ S.ShapeBuilder = (function () {
             var s = 0;
 
             setFontSize(fontSize);
+            // 控制字体大小
             s = Math.min(fontSize,
                 (shapeCanvas.width / shapeContext.measureText(l).width) * 0.8 * fontSize,
                 (shapeCanvas.height / fontSize) * (isNumber(l) ? 1 : 0.45) * fontSize);
@@ -507,7 +539,7 @@ S.Shape = (function () {
                     x: n.dots[i].x + cx,
                     y: n.dots[i].y + cy,
                     a: 1,
-                    z: 3,
+                    z: if_mobile? 2.3 : 5,
                     h: 0
                 }));
 
@@ -542,5 +574,25 @@ S.Shape = (function () {
         }
     };
 }());
+
+function show_date_time() {
+    window.setTimeout("show_date_time()", 1000);
+    BirthDay = new Date(meet_time);//这个日期是可以修改的
+    console.log(BirthDay)
+    today = new Date();
+    timeold = (today.getTime() - BirthDay.getTime());
+    sectimeold = timeold / 1000
+    secondsold = Math.floor(sectimeold);
+    msPerDay = 24 * 60 * 60 * 1000
+    e_daysold = timeold / msPerDay
+    daysold = Math.floor(e_daysold);
+    e_hrsold = (e_daysold - daysold) * 24;
+    hrsold = Math.floor(e_hrsold);
+    e_minsold = (e_hrsold - hrsold) * 60;
+    minsold = Math.floor((e_hrsold - hrsold) * 60);
+    seconds = Math.floor((e_minsold - minsold) * 60);
+    span_dt_dt.innerHTML = daysold + "天" + hrsold + "小时" + minsold + "分" + seconds + "秒";
+}
+show_date_time();
 
 S.init()
